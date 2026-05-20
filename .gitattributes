@@ -1,0 +1,16 @@
+.gitignore text
+.gitattributes text
+*.txt text
+*.md text linguist-language=MarkDown
+*.h text linguist-language=C++
+*.cpp text linguist-language=C++
+*.ps1 text eol=crlf linguist-language=PowerShell
+*.psm1 text eol=crlf linguist-language=PowerShell
+*.sln text eol=crlf linguist-language=VisualStudio
+*.props text eol=crlf linguist-language=VisualStudio
+*.vcxproj text eol=crlf linguist-language=VisualStudio
+*.vcxproj.filters text eol=crlf linguist-language=VisualStudio
+*.rc text eol=crlf linguist-language=WindowsResource
+*.html text eol=lf linguist-language=HTML
+*.sh text eol=lf linguist-language=Bash
+Makefile* text eol=lf linguist-language=Makefile
