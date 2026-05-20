@@ -1,4 +1,4 @@
-# Using Visual Studio for an application with DLL
+# Using Visual Studio for an application with threads in a DLL
 
 This demo illustrates a common singleton pattern of C++ and the danger of
 using it in a Windows DLL when this singleton (or static object) contains
@@ -32,10 +32,23 @@ This demo application implements a simple application and a library. The library
 uses an internal singleton which creates an internal thread. The application+library
 pair is built in two ways: with the library as a DLL and as a static library.
 
-In practice, the library in the demo application implements two singletons.
-One creates a standard C++ `std::thread`. The other one creates Windows native
+With the statically linked application, the internal thread of the singleton runs
+after the application returns from `main()` and then it is properly synchronized and
+terminated in the static destructor of the singleton.
+
+However, when the library is in a DLL, the internal thread of the singleton has
+disappeared when the application returns from `main()`. The static destructor of the
+singleton (the code of which is in the DLL) is properly executed but the internal
+thread had been killed, somehow, by Windows.
+
+When the same test is run on Linux or macOS, the expected legal C++ behaviour is
+observed, whether the library is a static library or a shared library.
+
+In practice, on Windows, the library in the demo application implements two singletons.
+One creates a standard C++ `std::thread`. The other one creates a Windows native
 thread using `CreateThread()`. The behaviour is identical between C++ thread and
-Windows native threads.
+Windows native threads. Therefore, the problem comes from Windows, not from the
+C++ runtime library.
 
 When implemented as a static library, the demo application output is:
 ~~~
