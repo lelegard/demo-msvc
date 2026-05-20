@@ -32,6 +32,11 @@ This demo application implements a simple application and a library. The library
 uses an internal singleton which creates an internal thread. The application+library
 pair is built in two ways: with the library as a DLL and as a static library.
 
+In practice, the library in the demo application implements two singletons.
+One creates a standard C++ `std::thread`. The other one creates Windows native
+thread using `CreateThread()`. The behaviour is identical between C++ thread and
+Windows native threads.
+
 When implemented as a static library, the demo application output is:
 ~~~
 main: enter
@@ -39,10 +44,18 @@ foo_function: enter
 A constructor: enter
 A constructor: return
 foo_function: return
-thread: enter
-main: return
-A destructor: enter
-thread: return
+foo_function_winthread: enter
+WinA constructor: enter
+WinA constructor: return
+foo_function_winthread: return
+A thread: enter
+WinA thread: enter
+main: return               <--- return from main()
+WinA destructor: enter     <--- static destructor
+WinA thread: return        <--- thread still running
+WinA destructor: return
+A destructor: enter        <--- static destructor
+A thread: return           <--- thread still running
 A destructor: return
 ~~~
 This is the expected behaviour.
@@ -56,10 +69,18 @@ A constructor: enter
 A constructor: return
 DllMain: thread attach
 foo_function: return
-thread: enter
-main: return
+foo_function_winthread: enter
+WinA constructor: enter
+WinA constructor: return
+foo_function_winthread: return
+A thread: enter
+DllMain: thread attach
+WinA thread: enter
+main: return               <--- return from main()
 DllMain: process detach
-A destructor: enter
+WinA destructor: enter     <--- static destructor, but thread no longer running
+WinA destructor: return
+A destructor: enter        <--- static destructor, but thread no longer running
 A destructor: return
 ~~~
 

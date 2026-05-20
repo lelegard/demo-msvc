@@ -12,6 +12,7 @@ int main(int argc, char* argv[])
 
     // Call the library (static or dynamic)
     foo_function();
+    foo_function_winthread();
 
     // Let's pretend we do something
     std::this_thread::sleep_for(std::chrono::milliseconds(500));

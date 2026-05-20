@@ -8,6 +8,7 @@
   <ItemGroup>
     <ClInclude Include="$(SrcDir)libfoo.h"/>
     <ClCompile Include="$(SrcDir)libfoo.cpp"/>
+    <ClCompile Include="$(SrcDir)libfoo-winthread.cpp"/>
     <ClCompile Include="$(SrcDir)libfoo-dllmain.cpp"/>
   </ItemGroup>
 

@@ -55,13 +55,13 @@ A::A()
 // Code of the thread.
 void A::thread_main()
 {
-    std::cout << "thread: enter" << std::endl;
+    std::cout << "A thread: enter" << std::endl;
     {
         // Wait for a termination request.
         std::unique_lock<std::mutex> lock(_mutex);
         _cond.wait(lock, [this]() { return _terminate; });
     }
-    std::cout << "thread: return" << std::endl;
+    std::cout << "A thread: return" << std::endl;
 }
 
 // Destructor: request the thread to terminate and wait for it.
