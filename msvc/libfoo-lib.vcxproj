@@ -8,13 +8,14 @@
   <ItemGroup>
     <ClInclude Include="$(SrcDir)libfoo.h"/>
     <ClCompile Include="$(SrcDir)libfoo.cpp"/>
+    <ClInclude Include="$(SrcDir)libfoo-winthread.h"/>
     <ClCompile Include="$(SrcDir)libfoo-winthread.cpp"/>
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
     <ProjectGuid>{46723B5B-69EA-4453-B7BD-2B307EB88432}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>libfoolib</RootNamespace>
+    <RootNamespace>libfoo-lib</RootNamespace>
   </PropertyGroup>
 
   <ImportGroup Label="PropertySheets">

@@ -53,48 +53,70 @@ C++ runtime library.
 When implemented as a static library, the demo application output is:
 ~~~
 main: enter
+main: calling foo_function
 foo_function: enter
-A constructor: enter
-A constructor: return
+StdThread constructor: enter    <--- std::thread created
+StdThread constructor: return
 foo_function: return
+main: calling foo_function_winthread
 foo_function_winthread: enter
-WinA constructor: enter
-WinA constructor: return
+WinThread constructor: enter    <--- native thread created
+WinThread constructor: return
 foo_function_winthread: return
-A thread: enter
-WinA thread: enter
-main: return               <--- return from main()
-WinA destructor: enter     <--- static destructor
-WinA thread: return        <--- thread still running
-WinA destructor: return
-A destructor: enter        <--- static destructor
-A thread: return           <--- thread still running
-A destructor: return
+StdThread thread: enter         <--- std::thread started
+WinThread thread: enter         <--- native thread started
+main: return                    <--- return from main()
+WinThread destructor: enter     <--- static destructor
+WinThread thread: return        <--- thread still running
+WinThread destructor: return
+StdThread destructor: enter     <--- static destructor
+StdThread thread: return        <--- thread still running
+StdThread destructor: return
 ~~~
 This is the expected behaviour.
 
-However, when implemented as a DLL, the demo application output is:
+When the library is implemented as a DLL, the standard C++ `std::thread` and the
+Windows native threads are confined to the DLL: the singletons which create and
+delete them, as well as the thread code are in the DLL.
+
+With the DLL architecture, we add a third thread which is created and deleted
+from the main application but the thread code is in the DLL.
+
+In the DLL case, the demo application output is:
 ~~~
-DllMain: process attach
-main: enter
+DllMain: process attach           <--- process is attached to DLL
+main: enter                       <--- main() is called
+main: calling foo_function
 foo_function: enter
-A constructor: enter
-A constructor: return
-DllMain: thread attach
+StdThread constructor: enter      <--- std::thread created in DLL
+StdThread constructor: return
+DllMain: thread attach            <--- std::thread is attached to DLL
 foo_function: return
+main: calling foo_function_winthread
 foo_function_winthread: enter
-WinA constructor: enter
-WinA constructor: return
+WinThread constructor: enter      <--- native thread created in DLL
+WinThread constructor: return
 foo_function_winthread: return
-A thread: enter
-DllMain: thread attach
-WinA thread: enter
-main: return               <--- return from main()
-DllMain: process detach
-WinA destructor: enter     <--- static destructor, but thread no longer running
-WinA destructor: return
-A destructor: enter        <--- static destructor, but thread no longer running
-A destructor: return
+main: calling CrossAppDll::instance
+CrossAppDll constructor: enter    <--- third thread created in application
+CrossAppDll constructor: return
+StdThread thread: enter           <--- std::thread started in DLL
+DllMain: thread attach            <--- native thread is attached to DLL
+WinThread thread: enter           <--- native thread started in DLL
+DllMain: thread attach            <--- third thread is attached to DLL
+CrossAppDll thread: enter         <--- third thread started in application
+foo_function_crossappdll: enter   <--- third thread continues in DLL
+main: return                      <--- return from main()
+CrossAppDll destructor: enter     <--- third thread static destructor in application
+foo_function_crossappdll: return  <--- third thread returns from DLL, back in application
+CrossAppDll thread: return        <--- third thread terminates, while in application
+DllMain: thread detach            <--- third thread is detached from DLL
+CrossAppDll destructor: return    <--- end of third thread static destructor
+DllMain: process detach           <--- process is detached from DLL (but DLL code and data are still there)
+WinThread destructor: enter       <--- native thread static destructor in DLL
+WinThread destructor: return      <--- ... native thread had already disappeared ...
+StdThread destructor: enter       <--- std::thread static destructor in DLL
+StdThread destructor: return      <--- ... std::thread had already disappeared ...
 ~~~
 
 The "DllMain" traces were added for information only.

@@ -21,7 +21,7 @@
       <LanguageStandard Condition="'$(STDCPP)'==''">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(STDCPP)'!=''">$(STDCPP)</LanguageStandard>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
-      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

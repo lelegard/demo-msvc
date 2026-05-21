@@ -1,19 +1,14 @@
 // Implementation of the libfoo library.
 // Can be built as a DLL or shared library.
-
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
 #include "libfoo.h"
 
 // This class uses an internal thread.
 // The thread is started in the constructor and terminated in the destructor.
-class A
+class StdThread
 {
 public:
     // This class is a singleton.
-    static A& instance();
+    static StdThread& instance();
 
 private:
     std::mutex              _mutex {};
@@ -21,53 +16,53 @@ private:
     std::thread*            _thread = nullptr;
     bool                    _terminate = false;
 
-    A();
-    ~A();
+    StdThread();
+    ~StdThread();
     void thread_main();
 };
 
 // Public API of the library (only one function).
 void foo_function()
 {
-    std::cout << "foo_function: enter" << std::endl;
+    std::cout << "foo_function: enter\n" << std::flush;
 
     // Reference the singleton. It is created the first time it is used.
-    A::instance();
+    StdThread::instance();
 
-    std::cout << "foo_function: return" << std::endl;
+    std::cout << "foo_function: return\n" << std::flush;
 }
 
-// Post-C++11 pattern to create a singleton of class A.
-A& A::instance()
+// Post-C++11 pattern to create a singleton of class StdThread.
+StdThread& StdThread::instance()
 {
-    static A a;
+    static StdThread a;
     return a;
 }
 
 // Constructor: start the thread.
-A::A()
+StdThread::StdThread()
 {
-    std::cout << "A constructor: enter" << std::endl;
+    std::cout << "StdThread constructor: enter\n" << std::flush;
     _thread = new std::thread([this](){ thread_main(); });
-    std::cout << "A constructor: return" << std::endl;
+    std::cout << "StdThread constructor: return\n" << std::flush;
 }
 
 // Code of the thread.
-void A::thread_main()
+void StdThread::thread_main()
 {
-    std::cout << "A thread: enter" << std::endl;
+    std::cout << "StdThread thread: enter\n" << std::flush;
     {
         // Wait for a termination request.
         std::unique_lock<std::mutex> lock(_mutex);
         _cond.wait(lock, [this]() { return _terminate; });
     }
-    std::cout << "A thread: return" << std::endl;
+    std::cout << "StdThread thread: return\n" << std::flush;
 }
 
 // Destructor: request the thread to terminate and wait for it.
-A::~A()
+StdThread::~StdThread()
 {
-    std::cout << "A destructor: enter" << std::endl;
+    std::cout << "StdThread destructor: enter\n" << std::flush;
     {
         // Send a termination request to the thread.
         std::lock_guard<std::mutex> lock(_mutex);
@@ -79,5 +74,5 @@ A::~A()
     _thread->join();
     delete _thread;
 
-    std::cout << "A destructor: return" << std::endl;
+    std::cout << "StdThread destructor: return\n" << std::flush;
 }

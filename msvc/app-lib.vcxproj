@@ -7,13 +7,14 @@
 
   <ItemGroup>
     <ClInclude Include="$(SrcDir)libfoo.h"/>
+    <ClInclude Include="$(SrcDir)libfoo-winthread.h"/>
     <ClCompile Include="$(SrcDir)app.cpp"/>
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2FFD7D6C-F3BF-4ED6-8593-20AC70A83AC1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>app-dll</RootNamespace>
+    <RootNamespace>app-lib</RootNamespace>
   </PropertyGroup>
 
   <ImportGroup Label="PropertySheets">

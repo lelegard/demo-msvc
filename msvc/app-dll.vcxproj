@@ -7,7 +7,10 @@
 
   <ItemGroup>
     <ClInclude Include="$(SrcDir)libfoo.h"/>
+    <ClInclude Include="$(SrcDir)libfoo-winthread.h"/>
+    <ClInclude Include="$(SrcDir)libfoo-crossappdll.h"/>
     <ClCompile Include="$(SrcDir)app.cpp"/>
+    <ClCompile Include="$(SrcDir)app-crossappdll.cpp"/>
   </ItemGroup>
 
   <PropertyGroup Label="Globals">

@@ -8,7 +8,10 @@
   <ItemGroup>
     <ClInclude Include="$(SrcDir)libfoo.h"/>
     <ClCompile Include="$(SrcDir)libfoo.cpp"/>
+    <ClInclude Include="$(SrcDir)libfoo-winthread.h"/>
     <ClCompile Include="$(SrcDir)libfoo-winthread.cpp"/>
+    <ClInclude Include="$(SrcDir)libfoo-crossappdll.h"/>
+    <ClCompile Include="$(SrcDir)libfoo-crossappdll.cpp"/>
     <ClCompile Include="$(SrcDir)libfoo-dllmain.cpp"/>
   </ItemGroup>
 
@@ -28,7 +31,7 @@
 
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>_LIBFOODLL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LIBFOODLL_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
 
